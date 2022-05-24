@@ -1,13 +1,14 @@
+httpbin: http://httpbin.org:80
 spring:
   cloud:
     gateway:
       routes:
         - id: anything
-          uri: http://httpbin.org:80
+          uri: ${httpbin}
           predicates:
             - Path=/anything/**
         - id: ip
-          uri: http://httpbin.org:80
+          uri: ${httpbin}
           predicates:
             - Path=/api/ip/**
           filters:

@@ -18,7 +18,7 @@ public class ApplicationTest {
     private WebTestClient webClient;
 
     @Test
-    public void contextLoads() throws Exception {
+    public void testMyRoute() throws Exception {
         //Stubs
         stubFor(get(urlEqualTo("/get"))
                 .willReturn(aResponse()
@@ -44,5 +44,21 @@ public class ApplicationTest {
                 .expectBody()
                 .consumeWith(
                         response -> assertThat(response.getResponseBody()).isEqualTo("fallback".getBytes()));
+    }
+
+    @Test
+    public void testRewritePath() throws Exception {
+        //Stubs
+        stubFor(get(urlEqualTo("/ip"))
+                .willReturn(aResponse()
+                        .withBody("{\"origin\":\"127.0.0.1\"}")
+                        .withHeader("Content-Type", "application/json")));
+
+        webClient
+                .get().uri("/api/ip")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.origin").isEqualTo("127.0.0.1");
     }
 }
