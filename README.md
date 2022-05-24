@@ -24,8 +24,8 @@ Key Concepts:
 ## 路由(route)配置
 
 路由配置方式：
-- 代码：[Java API](https://cloud.spring.io/spring-cloud-gateway/reference/html/#fluent-java-routes-api) (本demo)
-- 配置文件：Application configuration file (application.properties或application.yaml)
+- 代码：[Java API](https://cloud.spring.io/spring-cloud-gateway/reference/html/#fluent-java-routes-api) 参见Application.java
+- 配置文件：Application configuration file (application.properties或application.yaml) 参见application.yaml
 - 路由发现：[Route Discovery](https://cloud.spring.io/spring-cloud-gateway/reference/html/#the-discoveryclient-route-definition-locator) （需要配置服务注册中心使用）
 
 Route predicate:
@@ -38,6 +38,7 @@ Filters:
 - addRequestHeader
 - circuitBreaker
 - fallback
+- rewritepath
 
 Global filters:
 - ForwarRoutingdFilter: `forward:/fallback`
@@ -47,17 +48,30 @@ Global filters:
 
 ### Test a simple route
 ```bash
-# test via path
+# test path predicate in Java API
 http :8080/get
+
+# test path predicate defined in application.yaml
+http :8080/anything/happy
+
 ```
 
 ### Test Spring Cloud CircuitBreaker
 
 ```
-# test via host
+# test host predicate
 # circutit breaker without fallback: 503 Gateway Timeout
 # circutit breaker with fallback: 200 OK
 http -v :8080/delay/3 Host:'www.circuitbreaker.com'
+```
+
+### Test RewritePath filter
+
+```bash
+# forward `http://localhost:8080/api/ip` to `http://httpbin.org:80/ip` 
+# rewrite path from `/api/ip` to `/ip`
+# route defined in application.yaml
+http :8080/api/ip
 ```
 
 ## Further reading

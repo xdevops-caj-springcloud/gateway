@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: anything
+          uri: http://httpbin.org:80
+          predicates:
+            - Path=/anything/**
+        - id: ip
+          uri: http://httpbin.org:80
+          predicates:
+            - Path=/api/ip/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*), $\{segment}
